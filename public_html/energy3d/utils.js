@@ -3,11 +3,11 @@
  */
 
 class MathUtils {
-	static zeroTolerance() {
+	static get ZERO_TOLERANCE() {
 		return 0.0001;
 	}
 
-	static twoPI() {
+	static get TWO_PI() {
 		return Math.PI * 2;
 	}
 

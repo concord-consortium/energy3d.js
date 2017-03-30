@@ -152,291 +152,298 @@
         <script src="js/commands/SetMaterialMapCommand.js"></script>
         <script src="js/commands/SetSceneCommand.js"></script>
 
+		<script src="energy3d/utils.js"></script>
+		<script src="energy3d/heliodon.js"></script>
+
         <!-- <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="qyqgfqd9j8z890t"></script> -->
 
         <script src="js/libs/html2canvas.js"></script>
         <script src="js/libs/three.html.js"></script>
 
         <script>
-            window.URL = window.URL || window.webkitURL;
-            window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+			window.URL = window.URL || window.webkitURL;
+			window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
 
-            Number.prototype.format = function () {
-                return this.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-            };
+			Number.prototype.format = function () {
+				return this.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+			};
 
-            //
+			//
 
-            var editor = new Editor();
+			var editor = new Editor();
 
-            var viewport = new Viewport(editor);
-            document.body.appendChild(viewport.dom);
+			var heliodon = new Heliodon();
+			heliodon.draw();
+			editor.scene.add(heliodon.root);
 
-            var script = new Script(editor);
-            document.body.appendChild(script.dom);
+			var viewport = new Viewport(editor);
+			document.body.appendChild(viewport.dom);
 
-            var player = new Player(editor);
-            document.body.appendChild(player.dom);
+			var script = new Script(editor);
+			document.body.appendChild(script.dom);
 
-            var toolbar = new Toolbar(editor);
-            document.body.appendChild(toolbar.dom);
+			var player = new Player(editor);
+			document.body.appendChild(player.dom);
 
-            var menubar = new Menubar(editor);
-            document.body.appendChild(menubar.dom);
+			var toolbar = new Toolbar(editor);
+			document.body.appendChild(toolbar.dom);
 
-            var sidebar = new Sidebar(editor);
-            document.body.appendChild(sidebar.dom);
+			var menubar = new Menubar(editor);
+			document.body.appendChild(menubar.dom);
 
-            var modal = new UI.Modal();
-            document.body.appendChild(modal.dom);
+			var sidebar = new Sidebar(editor);
+			document.body.appendChild(sidebar.dom);
 
-            //
+			var modal = new UI.Modal();
+			document.body.appendChild(modal.dom);
 
-            editor.setTheme(editor.config.getKey('theme'));
+			//
 
-            editor.storage.init(function () {
+			editor.setTheme(editor.config.getKey('theme'));
 
-                editor.storage.get(function (state) {
+			editor.storage.init(function () {
 
-                    if (isLoadingFromHash)
-                        return;
+				editor.storage.get(function (state) {
 
-                    if (state !== undefined) {
+					if (isLoadingFromHash)
+						return;
 
-                        editor.fromJSON(state);
+					if (state !== undefined) {
 
-                    }
+						editor.fromJSON(state);
 
-                    var selected = editor.config.getKey('selected');
+					}
 
-                    if (selected !== undefined) {
+					var selected = editor.config.getKey('selected');
 
-                        editor.selectByUuid(selected);
+					if (selected !== undefined) {
 
-                    }
+						editor.selectByUuid(selected);
 
-                });
+					}
 
-                //
+				});
 
-                var timeout;
+				//
 
-                function saveState(scene) {
+				var timeout;
 
-                    if (editor.config.getKey('autosave') === false) {
+				function saveState(scene) {
 
-                        return;
+					if (editor.config.getKey('autosave') === false) {
 
-                    }
+						return;
 
-                    clearTimeout(timeout);
+					}
 
-                    timeout = setTimeout(function () {
+					clearTimeout(timeout);
 
-                        editor.signals.savingStarted.dispatch();
+					timeout = setTimeout(function () {
 
-                        timeout = setTimeout(function () {
+						editor.signals.savingStarted.dispatch();
 
-                            editor.storage.set(editor.toJSON());
+						timeout = setTimeout(function () {
 
-                            editor.signals.savingFinished.dispatch();
+							editor.storage.set(editor.toJSON());
 
-                        }, 100);
+							editor.signals.savingFinished.dispatch();
 
-                    }, 1000);
+						}, 100);
 
-                }
-                ;
+					}, 1000);
 
-                var signals = editor.signals;
+				}
+				;
 
-                signals.geometryChanged.add(saveState);
-                signals.objectAdded.add(saveState);
-                signals.objectChanged.add(saveState);
-                signals.objectRemoved.add(saveState);
-                signals.materialChanged.add(saveState);
-                signals.sceneBackgroundChanged.add(saveState);
-                signals.sceneFogChanged.add(saveState);
-                signals.sceneGraphChanged.add(saveState);
-                signals.scriptChanged.add(saveState);
-                signals.historyChanged.add(saveState);
+				var signals = editor.signals;
 
-                signals.showModal.add(function (content) {
+				signals.geometryChanged.add(saveState);
+				signals.objectAdded.add(saveState);
+				signals.objectChanged.add(saveState);
+				signals.objectRemoved.add(saveState);
+				signals.materialChanged.add(saveState);
+				signals.sceneBackgroundChanged.add(saveState);
+				signals.sceneFogChanged.add(saveState);
+				signals.sceneGraphChanged.add(saveState);
+				signals.scriptChanged.add(saveState);
+				signals.historyChanged.add(saveState);
 
-                    modal.show(content);
+				signals.showModal.add(function (content) {
 
-                });
+					modal.show(content);
 
-            });
+				});
 
-            //
+			});
 
-            document.addEventListener('dragover', function (event) {
+			//
 
-                event.preventDefault();
-                event.dataTransfer.dropEffect = 'copy';
+			document.addEventListener('dragover', function (event) {
 
-            }, false);
+				event.preventDefault();
+				event.dataTransfer.dropEffect = 'copy';
 
-            document.addEventListener('drop', function (event) {
+			}, false);
 
-                event.preventDefault();
+			document.addEventListener('drop', function (event) {
 
-                if (event.dataTransfer.files.length > 0) {
+				event.preventDefault();
 
-                    editor.loader.loadFile(event.dataTransfer.files[ 0 ]);
+				if (event.dataTransfer.files.length > 0) {
 
-                }
+					editor.loader.loadFile(event.dataTransfer.files[ 0 ]);
 
-            }, false);
+				}
 
-            document.addEventListener('keydown', function (event) {
+			}, false);
 
-                switch (event.keyCode) {
+			document.addEventListener('keydown', function (event) {
 
-                    case 8: // backspace
+				switch (event.keyCode) {
 
-                        event.preventDefault(); // prevent browser back
+					case 8: // backspace
 
-                    case 46: // delete
+						event.preventDefault(); // prevent browser back
 
-                        var object = editor.selected;
+					case 46: // delete
 
-                        if (confirm('Delete ' + object.name + '?') === false)
-                            return;
+						var object = editor.selected;
 
-                        var parent = object.parent;
-                        if (parent !== null)
-                            editor.execute(new RemoveObjectCommand(object));
+						if (confirm('Delete ' + object.name + '?') === false)
+							return;
 
-                        break;
+						var parent = object.parent;
+						if (parent !== null)
+							editor.execute(new RemoveObjectCommand(object));
 
-                    case 90: // Register Ctrl-Z for Undo, Ctrl-Shift-Z for Redo
+						break;
 
-                        if (event.ctrlKey && event.shiftKey) {
+					case 90: // Register Ctrl-Z for Undo, Ctrl-Shift-Z for Redo
 
-                            editor.redo();
+						if (event.ctrlKey && event.shiftKey) {
 
-                        } else if (event.ctrlKey) {
+							editor.redo();
 
-                            editor.undo();
+						} else if (event.ctrlKey) {
 
-                        }
+							editor.undo();
 
-                        break;
+						}
 
-                    case 87: // Register W for translation transform mode
+						break;
 
-                        editor.signals.transformModeChanged.dispatch('translate');
+					case 87: // Register W for translation transform mode
 
-                        break;
+						editor.signals.transformModeChanged.dispatch('translate');
 
-                    case 69: // Register E for rotation transform mode
+						break;
 
-                        editor.signals.transformModeChanged.dispatch('rotate');
+					case 69: // Register E for rotation transform mode
 
-                        break;
+						editor.signals.transformModeChanged.dispatch('rotate');
 
-                    case 82: // Register R for scaling transform mode
+						break;
 
-                        editor.signals.transformModeChanged.dispatch('scale');
+					case 82: // Register R for scaling transform mode
 
-                        break;
+						editor.signals.transformModeChanged.dispatch('scale');
 
-                }
+						break;
 
-            }, false);
+				}
 
-            function onWindowResize(event) {
+			}, false);
 
-                editor.signals.windowResize.dispatch();
+			function onWindowResize(event) {
 
-            }
+				editor.signals.windowResize.dispatch();
 
-            window.addEventListener('resize', onWindowResize, false);
+			}
 
-            onWindowResize();
+			window.addEventListener('resize', onWindowResize, false);
 
-            //
+			onWindowResize();
 
-            var isLoadingFromHash = false;
-            var hash = window.location.hash;
+			//
 
-            if (hash.substr(1, 5) === 'file=') {
+			var isLoadingFromHash = false;
+			var hash = window.location.hash;
 
-                var file = hash.substr(6);
+			if (hash.substr(1, 5) === 'file=') {
 
-                if (confirm('Any unsaved data will be lost. Are you sure?')) {
+				var file = hash.substr(6);
 
-                    var loader = new THREE.FileLoader();
-                    loader.crossOrigin = '';
-                    loader.load(file, function (text) {
+				if (confirm('Any unsaved data will be lost. Are you sure?')) {
 
-                        editor.clear();
-                        editor.fromJSON(JSON.parse(text));
+					var loader = new THREE.FileLoader();
+					loader.crossOrigin = '';
+					loader.load(file, function (text) {
 
-                    });
+						editor.clear();
+						editor.fromJSON(JSON.parse(text));
 
-                    isLoadingFromHash = true;
+					});
 
-                }
+					isLoadingFromHash = true;
 
-            }
+				}
 
-            /*
-             window.addEventListener( 'message', function ( event ) {
+			}
 
-             editor.clear();
-             editor.fromJSON( event.data );
+			/*
+			 window.addEventListener( 'message', function ( event ) {
 
-             }, false );
-             */
+			 editor.clear();
+			 editor.fromJSON( event.data );
 
-            // VR
+			 }, false );
+			 */
 
-            var groupVR;
+			// VR
 
-            // TODO: Use editor.signals.enteredVR (WebVR 1.0)
+			var groupVR;
 
-            editor.signals.enterVR.add(function () {
+			// TODO: Use editor.signals.enteredVR (WebVR 1.0)
 
-                if (groupVR === undefined) {
+			editor.signals.enterVR.add(function () {
 
-                    groupVR = new THREE.HTMLGroup(viewport.dom);
-                    editor.sceneHelpers.add(groupVR);
+				if (groupVR === undefined) {
 
-                    var mesh = new THREE.HTMLMesh(sidebar.dom);
-                    mesh.position.set(15, 0, 15);
-                    mesh.rotation.y = -0.5;
-                    groupVR.add(mesh);
+					groupVR = new THREE.HTMLGroup(viewport.dom);
+					editor.sceneHelpers.add(groupVR);
 
-                    var signals = editor.signals;
+					var mesh = new THREE.HTMLMesh(sidebar.dom);
+					mesh.position.set(15, 0, 15);
+					mesh.rotation.y = -0.5;
+					groupVR.add(mesh);
 
-                    function updateTexture() {
+					var signals = editor.signals;
 
-                        mesh.material.map.update();
+					function updateTexture() {
 
-                    }
+						mesh.material.map.update();
 
-                    signals.objectSelected.add(updateTexture);
-                    signals.objectAdded.add(updateTexture);
-                    signals.objectChanged.add(updateTexture);
-                    signals.objectRemoved.add(updateTexture);
-                    signals.sceneGraphChanged.add(updateTexture);
-                    signals.historyChanged.add(updateTexture);
+					}
 
-                }
+					signals.objectSelected.add(updateTexture);
+					signals.objectAdded.add(updateTexture);
+					signals.objectChanged.add(updateTexture);
+					signals.objectRemoved.add(updateTexture);
+					signals.sceneGraphChanged.add(updateTexture);
+					signals.historyChanged.add(updateTexture);
 
-                groupVR.visible = true;
+				}
 
-            });
+				groupVR.visible = true;
 
-            editor.signals.exitedVR.add(function () {
+			});
 
-                if (groupVR !== undefined)
-                    groupVR.visible = false;
+			editor.signals.exitedVR.add(function () {
 
-            });
+				if (groupVR !== undefined)
+					groupVR.visible = false;
+
+			});
 
         </script>
     </body>

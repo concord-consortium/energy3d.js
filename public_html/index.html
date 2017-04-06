@@ -168,9 +168,10 @@
 				return this.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 			};
 
-			//
-
+			//			
+			
 			var editor = new Editor();
+			editor.scene.rotation.x = -Math.PI/2;
 
 			var heliodon = new Heliodon();
 			heliodon.draw();

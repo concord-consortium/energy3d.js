@@ -19,12 +19,18 @@ class Heliodon {
 
 	constructor() {
 		this.latitude = 42 / 180.0 * Math.PI;
+		this.declinationAngle = 0;
+		this.hourAngle = 0;
 		this.root = new THREE.Object3D();
+		this.sun = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 20), new THREE.MeshBasicMaterial({color: 0xffff00}));
+		this.root.add(this.sun);
 	}
 
 	draw() {
 		this.drawBase();
 		this.drawSunRegion();
+		this.drawSunPath();
+		this.drawSun();
 	}
 
 	drawBase() {
@@ -63,7 +69,7 @@ class Heliodon {
 			baseGeometry.faces.push(new THREE.Face3(i * 2 + 1, i * 2 + 3, i * 2 + 2, normal, color));
 		}
 
-		var base = new THREE.Mesh(baseGeometry, new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors}));
+		let base = new THREE.Mesh(baseGeometry, new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors}));
 		let baseTicks = new THREE.LineSegments(baseTicksGeometry, new THREE.MeshBasicMaterial({color: 0x000000}));
 		this.root.add(base);
 		this.root.add(baseTicks);
@@ -106,6 +112,21 @@ class Heliodon {
 		this.root.add(sunRegion);
 	}
 
+	drawSunPath() {
+		const geometry = new THREE.Geometry();
+		const step = MathUtils.TWO_PI / Heliodon.HOUR_DIVISIONS;
+		for (let hourAngle = -Math.PI; hourAngle < Math.PI + step / 2.0; hourAngle += step) {
+			const v = this.computeSunLocation(hourAngle, this.declinationAngle, this.latitude);
+			if (v.z > -0.3) {
+				geometry.vertices.push(v);
+			}
+		}
+		if (geometry.vertices.length > 0) {
+			let sunPath = new THREE.Line(geometry, new THREE.MeshBasicMaterial({color: new THREE.Color(1, 1, 0)}));
+			this.root.add(sunPath);
+		}
+	}
+
 	computeSunLocation(hourAngle, declinationAngle, observerLatitude) {
 		let altitudeAngle = Math.asin(Math.sin(declinationAngle) * Math.sin(observerLatitude) + Math.cos(declinationAngle) * Math.cos(hourAngle) * Math.cos(observerLatitude));
 		let x_azm = Math.sin(hourAngle) * Math.cos(declinationAngle);
@@ -117,6 +138,15 @@ class Heliodon {
 		MathUtils.sphericalToCartesianZ(coords);
 		coords.setX(-coords.x); // reverse the x so that sun moves from east to west
 		return coords;
+	}
+
+	drawSun() {
+		const sunLocation = this.computeSunLocation(this.hourAngle, this.declinationAngle, this.latitude);
+		this.setSunLocation(sunLocation);
+	}
+
+	setSunLocation(sunLocation) {
+		this.sun.position.set(sunLocation.x, sunLocation.y, sunLocation.z);
 	}
 
 }

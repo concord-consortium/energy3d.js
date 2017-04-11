@@ -1,5 +1,5 @@
 /*
- * Author: Saeid Nourian (snourian@concord.org)
+ * @author: Saeid Nourian (snourian@concord.org)
  */
 
 /* global THREE, MathUtils */
@@ -17,6 +17,12 @@ class Heliodon {
 		return 96;
 	}
 
+	static get instance() {
+		if (!this.singletonInstance)
+			this.singletonInstance = new Heliodon();
+		return this.singletonInstance;
+	}
+
 	constructor() {
 		this.latitude = 42 / 180.0 * Math.PI;
 		this.declinationAngle = 0;
@@ -27,6 +33,9 @@ class Heliodon {
 	}
 
 	draw() {
+		while (this.root.children.length > 0) {
+			this.root.remove(this.root.children[0]);
+		}
 		this.drawBase();
 		this.drawSunRegion();
 		this.drawSunPath();
@@ -147,6 +156,28 @@ class Heliodon {
 
 	setSunLocation(sunLocation) {
 		this.sun.position.set(sunLocation.x, sunLocation.y, sunLocation.z);
+	}
+
+	getLatitude() {
+		return this.latitude;
+	}
+
+	setLatitude(latitude) {
+		this.latitude = this.toPlusMinusPIRange(latitude, -MathUtils.HALF_PI, MathUtils.HALF_PI);
+		this.draw();
+	}
+
+	toPlusMinusPIRange(radian, min, max) {
+		let result = radian - Math.floor(radian / MathUtils.TWO_PI) * MathUtils.TWO_PI;
+		if (Math.abs(result) > Math.PI) {
+			result = -Math.sign(result) * (MathUtils.TWO_PI - Math.abs(result));
+		}
+		if (result < min) {
+			result = min;
+		} else if (result > max) {
+			result = max;
+		}
+		return result;
 	}
 
 }

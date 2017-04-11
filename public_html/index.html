@@ -102,6 +102,7 @@
         <script src="js/Menubar.Help.js"></script>
         <script src="js/Menubar.Status.js"></script>
         <script src="js/Sidebar.js"></script>
+		<script src="energy3d/Sidebar.Energy.js"></script>
         <script src="js/Sidebar.Scene.js"></script>
         <script src="js/Sidebar.Project.js"></script>
         <script src="js/Sidebar.Settings.js"></script>
@@ -170,10 +171,10 @@
 
 			//			
 			
-			var editor = new Editor();
+			editor = new Editor();
 			editor.scene.rotation.x = -Math.PI/2;
 
-			var heliodon = new Heliodon();
+			var heliodon = Heliodon.instance;
 			heliodon.draw();
 			editor.scene.add(heliodon.root);
 

@@ -1,5 +1,5 @@
 /*
- * Author: Saeid Nourian (snourian@concord.org)
+ * @author: Saeid Nourian (snourian@concord.org)
  */
 
 class MathUtils {

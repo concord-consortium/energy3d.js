@@ -26,7 +26,7 @@ Sidebar.Energy = function (editor) {
 	// time
 	var row = new UI.Row();
 	var timeInput = new UI.Input("24:00").onChange(function () {
-		console.log(timeInput.getValue());
+		console.log(timeInput.getValue());		
 	});
 
 	row.add(new UI.Text('Time').setWidth('90px'));
@@ -52,7 +52,7 @@ Sidebar.Energy = function (editor) {
 	var row = new UI.Row();
 	var latitudeInput = new UI.Input("42").onChange(function () {
 		console.log(latitudeInput.getValue());
-		Heliodon.instance.setLatitude(latitudeInput.getValue());
+		Heliodon.instance.setLatitude(MathUtils.toRadians(latitudeInput.getValue()));
 		editor.signals.sceneGraphChanged.dispatch();
 	});
 

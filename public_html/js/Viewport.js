@@ -338,6 +338,7 @@ var Viewport = function ( editor ) {
 
 		renderer = newRenderer;
 
+		renderer.localClippingEnabled = true;
 		renderer.autoClear = false;
 		renderer.autoUpdateScene = false;
 		renderer.setPixelRatio( window.devicePixelRatio );

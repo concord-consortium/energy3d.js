@@ -16,7 +16,9 @@ Sidebar.Energy = function (editor) {
 	// date
 	var row = new UI.Row();
 	var dateInput = new UI.Input("1/1/2017").onChange(function () {
-		console.log(dateInput.getValue());
+		Heliodon.instance.setDate(new Date(dateInput.getValue()));		
+		Heliodon.instance.draw();
+		editor.signals.sceneGraphChanged.dispatch();
 	});
 
 	row.add(new UI.Text('Date').setWidth('90px'));
@@ -26,7 +28,9 @@ Sidebar.Energy = function (editor) {
 	// time
 	var row = new UI.Row();
 	var timeInput = new UI.Input("24:00").onChange(function () {
-		console.log(timeInput.getValue());		
+		Heliodon.instance.setTime(new Date("1/1/2017 " + timeInput.getValue()));
+		Heliodon.instance.draw();
+		editor.signals.sceneGraphChanged.dispatch();		
 	});
 
 	row.add(new UI.Text('Time').setWidth('90px'));
@@ -51,8 +55,8 @@ Sidebar.Energy = function (editor) {
 	// latitude
 	var row = new UI.Row();
 	var latitudeInput = new UI.Input("42").onChange(function () {
-		console.log(latitudeInput.getValue());
 		Heliodon.instance.setLatitude(MathUtils.toRadians(latitudeInput.getValue()));
+		Heliodon.instance.draw();
 		editor.signals.sceneGraphChanged.dispatch();
 	});
 

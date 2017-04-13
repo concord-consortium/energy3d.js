@@ -132,7 +132,7 @@ class Heliodon {
 			}
 		}
 		if (geometry.vertices.length > 0) {
-			let sunPath = new THREE.Line(geometry, new THREE.MeshBasicMaterial({color: new THREE.Color(1, 1, 0)}));
+			let sunPath = new THREE.Line(geometry, new THREE.MeshBasicMaterial({color: new THREE.Color(1, 1, 0), clippingPlanes: [new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)]}));
 			this.root.add(sunPath);
 		}
 	}

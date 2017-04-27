@@ -29,7 +29,7 @@ class Heliodon {
 		this.declinationAngle = 0;
 		this.hourAngle = 0;
 		this.root = new THREE.Object3D();
-		this.sun = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 20), new THREE.MeshBasicMaterial({color: 0xffff00}));		
+		this.sun = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 20), new THREE.MeshBasicMaterial({color: 0xffffff00}));
 	}
 
 	draw() {
@@ -39,7 +39,8 @@ class Heliodon {
 		this.drawBase();
 		this.drawSunRegion();
 		this.drawSunPath();
-		this.drawSun();		
+		this.drawSun();
+//		this.drawLensflare();
 	}
 
 	drawBase() {
@@ -141,6 +142,20 @@ class Heliodon {
 		const sunLocation = this.computeSunLocation(this.hourAngle, this.declinationAngle, this.latitude);
 		this.setSunLocation(sunLocation);
 		this.root.add(this.sun);
+	}
+
+	drawLensflare() {
+		var textureLoader = new THREE.TextureLoader();
+		var textureFlare0 = textureLoader.load("textures/lensflare/lensflare0.png");
+		var flareColor = new THREE.Color(0xffffff);
+		flareColor.setHSL(0.55, 0.9, 0.5 + 0.5);
+		this.lensFlare = new THREE.LensFlare(textureFlare0, 100, 0.0, THREE.AdditiveBlending, flareColor);
+		this.lensFlare.position.set(this.sun.position.x, this.sun.position.y, this.sun.position.z + 0.6);
+		this.root.add(this.lensFlare);
+	}
+
+	getSun() {
+		return this.sun;
 	}
 
 	computeSunLocation(hourAngle, declinationAngle, observerLatitude) {

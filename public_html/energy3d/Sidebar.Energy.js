@@ -2,9 +2,7 @@
  * @author: Saeid Nourian (snourian@concord.org)
  */
 
-/**
- * @author mrdoob / http://mrdoob.com/
- */
+/* global Sidebar, UI, Heliodon, MathUtils */
 
 Sidebar.Energy = function (editor) {
 

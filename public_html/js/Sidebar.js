@@ -1,5 +1,8 @@
+/* global UI */
+
 /**
  * @author mrdoob / http://mrdoob.com/
+ * @author: Saeid Nourian (snourian@concord.org)
  */
 
 var Sidebar = function ( editor ) {
@@ -13,10 +16,11 @@ var Sidebar = function ( editor ) {
 	var projectTab = new UI.Text( 'PROJECT' ).onClick( onClick );
 	var settingsTab = new UI.Text('SETTINGS').onClick(onClick);
 	var energyTab = new UI.Text('ENERGY').onClick(onClick);
+	var mapTab = new UI.Text('MAP').onClick(onClick);
 
 	var tabs = new UI.Div();
 	tabs.setId( 'tabs' );
-	tabs.add(sceneTab, projectTab, settingsTab, energyTab);
+	tabs.add(sceneTab, projectTab, settingsTab, energyTab, mapTab);
 	container.add( tabs );
 
 	function onClick( event ) {
@@ -46,10 +50,11 @@ var Sidebar = function ( editor ) {
 	);
 	container.add(settings);
 
-	var energy = new UI.Span().add(
-			new Sidebar.Energy(editor)
-			);
+	var energy = new UI.Span().add(new Sidebar.Energy(editor));
 	container.add(energy);
+
+	var map = new UI.Span().add(new Sidebar.Map(editor));
+	container.add(map);
 
 	//
 
@@ -57,11 +62,15 @@ var Sidebar = function ( editor ) {
 
 		sceneTab.setClass( '' );
 		projectTab.setClass( '' );
-		settingsTab.setClass( '' );
+		settingsTab.setClass('');
+		energyTab.setClass('');
+		mapTab.setClass('');
 
-		scene.setDisplay( 'none' );
+		scene.setDisplay('none');
 		project.setDisplay( 'none' );
 		settings.setDisplay( 'none' );
+		energy.setDisplay('none');
+		map.setDisplay('none');
 
 		switch ( section ) {
 			case 'SCENE':
@@ -75,6 +84,14 @@ var Sidebar = function ( editor ) {
 			case 'SETTINGS':
 				settingsTab.setClass( 'selected' );
 				settings.setDisplay( '' );
+				break;
+			case 'ENERGY':
+				energyTab.setClass('selected');
+				energy.setDisplay('');
+				break;
+			case 'MAP':
+				mapTab.setClass('selected');
+				map.setDisplay('');
 				break;
 		}
 

@@ -87,8 +87,25 @@ Sidebar.Map = function (editor) {
 	container.add(row);
 
 	// apply button
-	var applyButton = new UI.Button("Apply");
-	var clearButton = new UI.Button("Clear");
+	var applyButton = new UI.Button("Apply").onClick(function () {
+		if (parseInt(zoomInput.getValue()) < 16) {
+			alert("The selected region is too large. Please zoom in and try again.");
+		} else {
+			const loader = new THREE.TextureLoader();
+			loader.crossOrigin = '';
+			var texture = loader.load(getGoogleMapUrl(true), function () {
+				var geometry = new THREE.PlaneGeometry(10, 10);
+				var material = new THREE.MeshBasicMaterial({map: texture});
+				var plane = new THREE.Mesh(geometry, material);
+				editor.scene.add(plane);
+				editor.signals.sceneGraphChanged.dispatch();
+			});
+		}
+
+	});
+	var clearButton = new UI.Button("Clear").onClick(function () {
+		alert("Hello");
+	});
 
 	applyButton.setMargin("5px");
 	clearButton.setMargin("5px");

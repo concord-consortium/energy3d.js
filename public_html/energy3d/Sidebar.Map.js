@@ -36,43 +36,45 @@ Sidebar.Map = function (editor) {
 		xmlHttp.send(null);
 	}
 
+	// address, latitude, longitude, zoom
+	var addressInput = new UI.Input("25 Love lane, Concord, MA, USA").setWidth('95%').onChange(function () {
+		getGoogleMapAddressCoordinates();
+	});
+
+	var latitudeInput = new UI.Input("42.45661").onChange(function () {
+		updateMap();
+	});
+	var longitudeInput = new UI.Input("-71.35823").onChange(function () {
+		updateMap();
+	});
+	var zoomInput = new UI.Input("20").onChange(function () {
+		updateMap();
+	});
+
 	var container = new UI.Panel();
 	container.setBorderTop('0');
 	container.setPaddingTop('20px');
 
-	// address
 	var row = new UI.Row();
-	var addressInput = new UI.Input("25 Love lane, Concord, MA, USA").setWidth('210px').onChange(function () {
-		getGoogleMapAddressCoordinates();
-	});
-
-	addressInput.setMargin("5px");
-
 	row.add(new UI.Text("Address"));
+	container.add(row);
+
+	var row = new UI.Row();
 	row.add(addressInput);
 	container.add(row);
 
-	// latitude, longitude, zoom
 	var row = new UI.Row();
-	var latitudeInput = new UI.Input("42.45661").setWidth('27px').onChange(function () {
-		updateMap();
-	});
-	var longitudeInput = new UI.Input("-71.35823").setWidth('27px').onChange(function () {
-		updateMap();
-	});
-	var zoomInput = new UI.Input("20").setWidth('27px').onChange(function () {
-		updateMap();
-	});
-
-	latitudeInput.setMargin("5px");
-	longitudeInput.setMargin("5px");
-	zoomInput.setMargin("5px");
-
-	row.add(new UI.Text("Latitude"));
+	row.add(new UI.Text("Latitude").setWidth('90px'));
 	row.add(latitudeInput);
-	row.add(new UI.Text("Longitude"));
+	container.add(row);
+
+	var row = new UI.Row();
+	row.add(new UI.Text("Longitude").setWidth('90px'));
 	row.add(longitudeInput);
-	row.add(new UI.Text("Zoom"));
+	container.add(row);
+
+	var row = new UI.Row();
+	row.add(new UI.Text("Zoom").setWidth('90px'));
 	row.add(zoomInput);
 	container.add(row);
 

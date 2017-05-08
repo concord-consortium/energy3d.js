@@ -2,7 +2,7 @@
  * @author: Saeid Nourian (snourian@concord.org)
  */
 
-/* global Sidebar, UI */
+/* global Sidebar, UI, THREE */
 
 Sidebar.Map = function (editor) {
 
@@ -34,6 +34,24 @@ Sidebar.Map = function (editor) {
 		};
 		xmlHttp.open("GET", url, true); // true for asynchronous
 		xmlHttp.send(null);
+	}
+
+	function getScale() {
+		const zoom = parseInt(zoomInput.getValue());
+		if (zoom === 21) {
+			return 0.5;
+		} else if (zoom === 20) {
+			return 1;
+		} else {
+			return Math.pow(2, 20 - zoom);
+		}
+	}
+
+	function setGridVisible(visible) {
+		editor.sceneHelpers.children.forEach(function (child) {
+			if (child instanceof THREE.GridHelper)
+				child.visible = visible;
+		});
 	}
 
 	// address, latitude, longitude, zoom
@@ -86,6 +104,10 @@ Sidebar.Map = function (editor) {
 	row.dom.appendChild(mapImg);
 	container.add(row);
 
+	// add map plane to scene
+	var plane = new THREE.Object3D();
+	editor.scene.add(plane);
+
 	// apply button
 	var applyButton = new UI.Button("Apply").onClick(function () {
 		if (parseInt(zoomInput.getValue()) < 16) {
@@ -94,17 +116,21 @@ Sidebar.Map = function (editor) {
 			const loader = new THREE.TextureLoader();
 			loader.crossOrigin = '';
 			var texture = loader.load(getGoogleMapUrl(true), function () {
-				var geometry = new THREE.PlaneGeometry(10, 10);
+				const d = 68.75 * getScale();
+				plane.children.length = 0;
+				var geometry = new THREE.PlaneGeometry(d, d);
 				var material = new THREE.MeshBasicMaterial({map: texture});
-				var plane = new THREE.Mesh(geometry, material);
-				editor.scene.add(plane);
+				plane.add(new THREE.Mesh(geometry, material));
+				setGridVisible(false);
 				editor.signals.sceneGraphChanged.dispatch();
 			});
 		}
 
 	});
 	var clearButton = new UI.Button("Clear").onClick(function () {
-		alert("Hello");
+		plane.children.length = 0;
+		setGridVisible(true);
+		editor.signals.sceneGraphChanged.dispatch();
 	});
 
 	applyButton.setMargin("5px");

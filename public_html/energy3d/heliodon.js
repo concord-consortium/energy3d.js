@@ -63,10 +63,15 @@ class Heliodon {
 			baseGeometry.vertices.push(MathUtils.sphericalToCartesianZ(new THREE.Vector3(r, trimedAngle, 0)));
 			baseGeometry.vertices.push(MathUtils.sphericalToCartesianZ(new THREE.Vector3(r + width, trimedAngle, 0)));
 
+			let p;
 			if (MathUtils.TWO_PI - trimedAngle > MathUtils.ZERO_TOLERANCE) {
 				width = counter % 3 === 0 ? 0.5 : 0.3;
-				baseTicksGeometry.vertices.push(MathUtils.sphericalToCartesianZ(new THREE.Vector3(r, trimedAngle, 0)));
-				baseTicksGeometry.vertices.push(MathUtils.sphericalToCartesianZ(new THREE.Vector3(r + width, trimedAngle, 0)));
+				p = new THREE.Vector3(r, trimedAngle, 0);
+				p.z = 0.002;
+				baseTicksGeometry.vertices.push(MathUtils.sphericalToCartesianZ(p));
+				p = new THREE.Vector3(r + width, trimedAngle, 0);
+				p.z = 0.002;
+				baseTicksGeometry.vertices.push(MathUtils.sphericalToCartesianZ(p));
 			}
 			counter++;
 		}
@@ -79,8 +84,13 @@ class Heliodon {
 			baseGeometry.faces.push(new THREE.Face3(i * 2 + 1, i * 2 + 3, i * 2 + 2, normal, color));
 		}
 
-		let base = new THREE.Mesh(baseGeometry, new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors}));
+		let base = new THREE.Mesh(baseGeometry, new THREE.MeshBasicMaterial({
+			vertexColors: THREE.FaceColors,
+			polygonOffset: true,
+			polygonOffsetFactor: -0.7,
+			polygonOffsetUnits: -2}));
 		let baseTicks = new THREE.LineSegments(baseTicksGeometry, new THREE.MeshBasicMaterial({color: 0x000000}));
+
 		this.root.add(base);
 		this.root.add(baseTicks);
 	}

@@ -157,10 +157,17 @@
         <script src="js/libs/html2canvas.js"></script>
         <script src="js/libs/three.html.js"></script>
 
-		<script src="energy3d/utils.js"></script>
-		<script src="energy3d/heliodon.js"></script>
+		<script src="energy3d/Utils.js"></script>
+		<script src="energy3d/Heliodon.js"></script>
 		<script src="energy3d/Sidebar.Energy.js"></script>
 		<script src="energy3d/Sidebar.Map.js"></script>
+		<script src="energy3d/UserData.js"></script>
+		<script src="energy3d/ElementView.js"></script>
+		<script src="energy3d/ElementModel.js"></script>
+		<script src="energy3d/Foundation.js"></script>
+		<script src="energy3d/FoundationModel.js"></script>
+		<script src="energy3d/Rack.js"></script>
+		<script src="energy3d/RackModel.js"></script>
 
         <script>
 			window.URL = window.URL || window.webkitURL;
@@ -178,6 +185,8 @@
 			var heliodon = Heliodon.instance;
 			heliodon.draw();
 			editor.scene.add(heliodon.root);
+
+			new Rack();
 
 			var viewport = new Viewport(editor);
 			document.body.appendChild(viewport.dom);

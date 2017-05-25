@@ -73,9 +73,7 @@ Menubar.Add = function ( editor ) {
 	option.setTextContent( 'Box' );
 	option.onClick( function () {
 
-		var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-		var mesh = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial() );
-		mesh.name = 'Box ' + ( ++ meshCount );
+		var mesh = new Foundation().root;
 
 		editor.execute( new AddObjectCommand( mesh ) );
 

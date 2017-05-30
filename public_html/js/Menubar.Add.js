@@ -1,8 +1,11 @@
 /**
  * @author mrdoob / http://mrdoob.com/
+ * @author: Saeid Nourian (snourian@concord.org)
  */
 
-Menubar.Add = function ( editor ) {
+/* global THREE, UI, Menubar */
+
+Menubar.Add = function (editor) {
 
 	var container = new UI.Panel();
 	container.setClass( 'menu' );
@@ -47,7 +50,31 @@ Menubar.Add = function ( editor ) {
 
 	//
 
-	options.add( new UI.HorizontalRule() );
+	options.add(new UI.HorizontalRule());
+
+	// Foundation
+
+	var option = new UI.Row();
+	option.setClass('option');
+	option.setTextContent('Foundation');
+	option.onClick(function () {
+		var mesh = new Foundation().root;
+		mesh.name += ++meshCount;
+		editor.execute(new AddObjectCommand(mesh));
+	});
+	options.add(option);
+
+	// Solar Rack
+
+	var option = new UI.Row();
+	option.setClass('option');
+	option.setTextContent('Solar Rack');
+	option.onClick(function () {
+		var mesh = new Rack().root;
+		mesh.name += ++meshCount;
+		editor.execute(new AddObjectCommand(mesh));
+	});
+	options.add(option);
 
 	// Plane
 
@@ -71,13 +98,12 @@ Menubar.Add = function ( editor ) {
 	var option = new UI.Row();
 	option.setClass( 'option' );
 	option.setTextContent( 'Box' );
-	option.onClick( function () {
-
-		var mesh = new Foundation().root;
-
-		editor.execute( new AddObjectCommand( mesh ) );
-
-	} );
+	option.onClick(function () {
+		var geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+		var mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial());
+		mesh.name = 'Box ' + (++meshCount);
+		editor.execute(new AddObjectCommand(mesh));
+	});
 	options.add( option );
 
 	// Circle
@@ -90,14 +116,14 @@ Menubar.Add = function ( editor ) {
 		var radius = 1;
 		var segments = 32;
 
-		var geometry = new THREE.CircleBufferGeometry( radius, segments );
-		var mesh = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial() );
-		mesh.name = 'Circle ' + ( ++ meshCount );
+		var geometry = new THREE.CircleBufferGeometry(radius, segments);
+		var mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial());
+		mesh.name = 'Circle ' + (++meshCount);
 
-		editor.execute( new AddObjectCommand( mesh ) );
+		editor.execute(new AddObjectCommand(mesh));
 
-	} );
-	options.add( option );
+	});
+	options.add(option);
 
 	// Cylinder
 

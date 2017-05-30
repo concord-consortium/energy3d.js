@@ -430,7 +430,8 @@ var Viewport = function ( editor ) {
 	signals.objectChanged.add( function ( object ) {
 
 		if ( editor.selected === object ) {
-
+			if (object.userData.elementView)
+				object.userData.elementView.update();
 			selectionBox.update( object );
 			transformControls.update();
 

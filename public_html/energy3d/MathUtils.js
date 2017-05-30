@@ -10,15 +10,15 @@ class MathUtils {
 	static get TWO_PI() {
 		return Math.PI * 2;
 	}
-	
+
 	static toRadians(degrees) {
 		return degrees * (Math.PI / 180);
 	}
-	
+
 	static toDegrees(radians) {
 		return radians * (180 / Math.PI);
-	}	
-	
+	}
+
 	static sphericalToCartesianZ(sphereCoords) {
 		let a = sphereCoords.x * Math.cos(sphereCoords.z);
 		let x = a * Math.cos(sphereCoords.y);
@@ -28,4 +28,3 @@ class MathUtils {
 		return sphereCoords;
 	}
 }
-

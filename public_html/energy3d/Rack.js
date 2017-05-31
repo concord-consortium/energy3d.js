@@ -13,12 +13,12 @@ class Rack extends ElementView {
 		this.root.name = "Rack";
 		this.root.userData = userData;
 
-		const topMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 0.05), new THREE.MeshStandardMaterial());
-		topMesh.name = "Rack Top";
-		topMesh.userData = userData;
-		topMesh.position.z = 1;
-		topMesh.rotation.x = 0.5;
-		this.root.add(topMesh);
+		this.topMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 0.05), new THREE.MeshStandardMaterial());
+		this.topMesh.name = "Rack Top";
+		this.topMesh.userData = userData;
+		this.topMesh.position.z = 1;
+		this.topMesh.rotation.x = 0.5;
+		this.root.add(this.topMesh);
 
 		this.update();
 	}
@@ -45,7 +45,7 @@ class Rack extends ElementView {
 
 	addPole(position, poleHeight) {
 		const radius = 0.05;
-		poleHeight -= -0.5 * radius; // slightly shorter so that the pole won't penetrate the surface of the rack
+		poleHeight += (position.y - radius) * Math.tan(this.topMesh.rotation.x);
 		const geometry = new THREE.CylinderBufferGeometry(radius, radius, poleHeight, 20);
 		const material = new THREE.MeshBasicMaterial();
 		const pole = new THREE.Mesh(geometry, material);

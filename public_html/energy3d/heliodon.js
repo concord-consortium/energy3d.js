@@ -192,14 +192,14 @@ class Heliodon {
 	setLatitude(latitude) {
 		this.latitude = this.toPlusMinusPIRange(latitude, -MathUtils.HALF_PI, MathUtils.HALF_PI);
 	}
-	
+
 	setDeclinationAngle(declinationAngle) {
 		this.declinationAngle = this.toPlusMinusPIRange(declinationAngle, -Heliodon.TILT_ANGLE, Heliodon.TILT_ANGLE);
 	}
-	
+
 	setHourAngle(hourAngle) {
 		this.hourAngle = this.toPlusMinusPIRange(hourAngle, -Math.PI, Math.PI);
-	}	
+	}
 
 	setDate(date) {
 		this.date.setYear(date.getFullYear());
@@ -210,15 +210,15 @@ class Heliodon {
 
 	setTime(time) {
 		this.date.setHours(time.getHours());
-		this.date.setMinutes(time.getMinutes());		
+		this.date.setMinutes(time.getMinutes());
 		this.setHourAngle(this.computeHourAngle(this.date), true, false, false);
 	}
 
 	computeDeclinationAngle(date) {
-		let days = Math.floor((date - new Date(date.getFullYear(), 0, 0))/(1000 * 60 * 60 * 24));
+		let days = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
 		let declinationAngle = Heliodon.TILT_ANGLE * Math.sin(MathUtils.TWO_PI * (284 + days) / 365.25);
 		return declinationAngle;
-	}	
+	}
 
 	computeHourAngle(date) {
 		let minutes = date.getHours() * 60 + date.getMinutes() - 12 * 60;

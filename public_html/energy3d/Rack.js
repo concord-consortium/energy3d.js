@@ -25,12 +25,12 @@ class Rack extends ElementView {
 
 	update() {
 		this.root.children.length = 1;
-		const scaleX = this.root.scale.x;
-		const scaleY = this.root.scale.y;
+		const scaleX = this.topMesh.scale.x;
+		const scaleY = this.topMesh.scale.y * Math.cos(this.topMesh.rotation.x);
 		for (let i = 0; i < scaleX; i += 1) {
-			const x = i / 2 / scaleX;
+			const x = i / 2;
 			for (let j = 0; j < scaleY; j += 1) {
-				const y = j / 2 / scaleY;
+				const y = j / 2;
 				this.addPole(new THREE.Vector3(x, y, 0), 1);
 				if (i !== 0)
 					this.addPole(new THREE.Vector3(-x, y, 0), 1);

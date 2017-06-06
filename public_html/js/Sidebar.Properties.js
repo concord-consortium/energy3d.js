@@ -1,5 +1,8 @@
+/* global Sidebar, UI */
+
 /**
  * @author mrdoob / http://mrdoob.com/
+ * @author Saeid Nourian (snourian@concord.org)
  */
 
 Sidebar.Properties = function ( editor ) {
@@ -8,13 +11,14 @@ Sidebar.Properties = function ( editor ) {
 
 	var container = new UI.Span();
 
-	var objectTab = new UI.Text( 'OBJECT' ).onClick( onClick );
-	var geometryTab = new UI.Text( 'GEOMETRY' ).onClick( onClick );
+	var elementTab = new UI.Text('ELEMENT').onClick(onClick);
+	var objectTab = new UI.Text('OBJECT').onClick(onClick);
+	var geometryTab = new UI.Text('GEOMETRY').onClick(onClick);
 	var materialTab = new UI.Text( 'MATERIAL' ).onClick( onClick );
 
 	var tabs = new UI.Div();
 	tabs.setId( 'tabs' );
-	tabs.add( objectTab, geometryTab, materialTab );
+	tabs.add(elementTab, objectTab, geometryTab, materialTab);
 	container.add( tabs );
 
 	function onClick( event ) {
@@ -24,6 +28,8 @@ Sidebar.Properties = function ( editor ) {
 	}
 
 	//
+	var element = new UI.Span().add(new Sidebar.Element(editor));
+	container.add(element);
 
 	var object = new UI.Span().add(
 		new Sidebar.Object( editor )
@@ -44,15 +50,21 @@ Sidebar.Properties = function ( editor ) {
 
 	function select( section ) {
 
+		elementTab.setClass('');
 		objectTab.setClass( '' );
 		geometryTab.setClass( '' );
 		materialTab.setClass( '' );
 
-		object.setDisplay( 'none' );
-		geometry.setDisplay( 'none' );
+		element.setDisplay('none');
+		object.setDisplay('none');
+		geometry.setDisplay('none');
 		material.setDisplay( 'none' );
 
 		switch ( section ) {
+			case 'ELEMENT':
+				elementTab.setClass('selected');
+				element.setDisplay('');
+				break;
 			case 'OBJECT':
 				objectTab.setClass( 'selected' );
 				object.setDisplay( '' );

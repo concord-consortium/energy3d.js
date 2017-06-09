@@ -41,7 +41,7 @@ Sidebar.Element = function (editor) {
 
 	function build() {
 		var object = editor.selected;
-		if (object && object.geometry) {
+		if (object && object.userData.elementView) {
 			container.setDisplay('block');
 			const type = object.userData.elementView.constructor.name;
 			elementType.setValue(type);

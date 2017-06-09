@@ -408,7 +408,8 @@ var Viewport = function ( editor ) {
 	signals.geometryChanged.add( function ( object ) {
 
 		if ( object !== undefined ) {
-
+			if (object.userData.elementView)
+				object.userData.elementView.update();
 			selectionBox.update( object );
 
 		}
@@ -430,10 +431,10 @@ var Viewport = function ( editor ) {
 	signals.objectChanged.add( function ( object ) {
 
 		if ( editor.selected === object ) {
+			selectionBox.update(object);
+			transformControls.update();
 			if (object.userData.elementView)
 				object.userData.elementView.update();
-			selectionBox.update( object );
-			transformControls.update();
 
 		}
 

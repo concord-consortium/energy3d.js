@@ -362,6 +362,9 @@ Editor.prototype = {
 
 		}
 
+		if (object && object.userData && object.userData.elementView)
+			object = object.userData.elementView.root;
+
 		this.selected = object;
 
 		this.config.setKey( 'selected', uuid );

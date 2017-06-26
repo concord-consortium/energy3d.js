@@ -78,6 +78,13 @@ Sidebar.Element.Rack = function (editor, object) {
 		}
 	}
 
+	container.updateUI = function (object) {
+		objectPositionX.setValue(object.position.x);
+		objectPositionY.setValue(object.position.y);
+		objectRotationX.setValue(object.userData.elementView.topMesh.rotation.x * THREE.Math.RAD2DEG);
+		objectRotationZ.setValue(object.rotation.z * THREE.Math.RAD2DEG);
+	};
+
 	return container;
 
 };

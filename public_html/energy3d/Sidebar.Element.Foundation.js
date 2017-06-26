@@ -81,6 +81,12 @@ Sidebar.Element.Foundation = function (editor, object) {
 		}
 	}
 
+	container.updateUI = function (object) {
+		objectPositionX.setValue(object.position.x);
+		objectPositionY.setValue(object.position.y);
+		objectRotationZ.setValue(object.rotation.z * THREE.Math.RAD2DEG);
+	};
+
 	return container;
 
 };

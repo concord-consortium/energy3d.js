@@ -38,6 +38,7 @@ Sidebar.Element = function (editor) {
 
 	var parameters = new UI.Span();
 	container.add(parameters);
+	var elementPanel;
 
 	function build() {
 		var object = editor.selected;
@@ -48,7 +49,8 @@ Sidebar.Element = function (editor) {
 			elementName.setValue(object.name);
 			parameters.clear();
 			if (Sidebar.Element[ type ] !== undefined) {
-				parameters.add(new Sidebar.Element[ type ](editor, object));
+				elementPanel = new Sidebar.Element[ type ](editor, object);
+				parameters.add(elementPanel);
 			}
 		} else {
 			container.setDisplay('none');
@@ -57,6 +59,25 @@ Sidebar.Element = function (editor) {
 
 	signals.objectSelected.add(build);
 	signals.geometryChanged.add(build);
+
+	// events
+
+	signals.objectSelected.add(function (object) {
+		if (object !== null)
+			elementPanel.updateUI(object);
+	});
+
+	signals.objectChanged.add(function (object) {
+		if (object !== editor.selected)
+			return;
+		elementPanel.updateUI(object);
+	});
+
+	signals.refreshSidebarObject3D.add(function (object) {
+		if (object !== editor.selected)
+			return;
+		elementPanel.updateUI(object);
+	});
 
 	return container;
 };

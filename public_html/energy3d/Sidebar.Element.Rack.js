@@ -12,47 +12,49 @@ Sidebar.Element.Rack = function (editor, object) {
 
 	var parameters = object.userData.elementView.topMesh.geometry.parameters;
 
-	// width
+	// dimension
 
-	var widthRow = new UI.Row();
-	var width = new UI.Number(parameters.width).onChange(updateGeometry);
+	var dimensionRow = new UI.Row();
+	var width = new UI.Number(parameters.width).setWidth('50px').onChange(updateGeometry);
+	var height = new UI.Number(parameters.height).setWidth('50px').onChange(updateGeometry);
 
-	widthRow.add(new UI.Text('Width').setWidth('90px'));
-	widthRow.add(width);
+	dimensionRow.add(new UI.Text('Dimension').setWidth('110px'));
+	dimensionRow.add(width, height);
 
-	container.add(widthRow);
+	container.add(dimensionRow);
 
-	// height
+	// polls
 
-	var heightRow = new UI.Row();
-	var height = new UI.Number(parameters.height).onChange(updateGeometry);
+	var pollsRow = new UI.Row();
+	var pollsDistanceX = new UI.Number(1).setWidth('50px').onChange(updateGeometry);
+	var pollsDistanceY = new UI.Number(1).setWidth('50px').onChange(updateGeometry);
 
-	heightRow.add(new UI.Text('Height').setWidth('90px'));
-	heightRow.add(height);
+	pollsRow.add(new UI.Text('Polls Distance').setWidth('110px'));
+	pollsRow.add(pollsDistanceX, pollsDistanceY);
 
-	container.add(heightRow);
+	container.add(pollsRow);
 
 	// position
 
-	var objectPositionRow = new UI.Row();
-	var objectPositionX = new UI.Number().setWidth('50px').onChange(update);
-	var objectPositionY = new UI.Number().setWidth('50px').onChange(update);
+	var positionRow = new UI.Row();
+	var positionX = new UI.Number().setWidth('50px').onChange(update);
+	var positionY = new UI.Number().setWidth('50px').onChange(update);
 
-	objectPositionRow.add(new UI.Text('Position').setWidth('90px'));
-	objectPositionRow.add(objectPositionX, objectPositionY);
+	positionRow.add(new UI.Text('Position').setWidth('110px'));
+	positionRow.add(positionX, positionY);
 
-	container.add(objectPositionRow);
+	container.add(positionRow);
 
 	// rotation
 
-	var objectRotationRow = new UI.Row();
-	var objectRotationX = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(update);
-	var objectRotationZ = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(update);
+	var rotationRow = new UI.Row();
+	var rotationX = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(update);
+	var rotationZ = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(update);
 
-	objectRotationRow.add(new UI.Text('Rotation').setWidth('90px'));
-	objectRotationRow.add(objectRotationX, objectRotationZ);
+	rotationRow.add(new UI.Text('Rotation').setWidth('110px'));
+	rotationRow.add(rotationZ, rotationX);
 
-	container.add(objectRotationRow);
+	container.add(rotationRow);
 
 
 	function updateGeometry() {
@@ -61,28 +63,28 @@ Sidebar.Element.Rack = function (editor, object) {
 
 	function update() {
 		let target = object.userData.elementView.root;
-		var newPosition = new THREE.Vector3(objectPositionX.getValue(), objectPositionY.getValue(), target.position.z);
+		var newPosition = new THREE.Vector3(positionX.getValue(), positionY.getValue(), target.position.z);
 		if (target.position.distanceTo(newPosition) >= 0.01) {
 			editor.execute(new SetPositionCommand(target, newPosition));
 		}
 
-		var newRotation = new THREE.Euler(0, 0, objectRotationZ.getValue() * THREE.Math.DEG2RAD);
+		var newRotation = new THREE.Euler(0, 0, rotationZ.getValue() * THREE.Math.DEG2RAD);
 		if (target.rotation.toVector3().distanceTo(newRotation.toVector3()) >= 0.01) {
 			editor.execute(new SetRotationCommand(target, newRotation));
 		}
 
 		target = object.userData.elementView.topMesh;
-		var newRotation = new THREE.Euler(objectRotationX.getValue() * THREE.Math.DEG2RAD, 0, 0);
+		var newRotation = new THREE.Euler(rotationX.getValue() * THREE.Math.DEG2RAD, 0, 0);
 		if (target.rotation.toVector3().distanceTo(newRotation.toVector3()) >= 0.01) {
 			editor.execute(new SetRotationCommand(target, newRotation));
 		}
 	}
 
 	container.updateUI = function (object) {
-		objectPositionX.setValue(object.position.x);
-		objectPositionY.setValue(object.position.y);
-		objectRotationX.setValue(object.userData.elementView.topMesh.rotation.x * THREE.Math.RAD2DEG);
-		objectRotationZ.setValue(object.rotation.z * THREE.Math.RAD2DEG);
+		positionX.setValue(object.position.x);
+		positionY.setValue(object.position.y);
+		rotationX.setValue(object.userData.elementView.topMesh.rotation.x * THREE.Math.RAD2DEG);
+		rotationZ.setValue(object.rotation.z * THREE.Math.RAD2DEG);
 	};
 
 	return container;

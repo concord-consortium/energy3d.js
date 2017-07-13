@@ -150,7 +150,8 @@
         <script src="js/commands/SetMaterialValueCommand.js"></script>
         <script src="js/commands/SetMaterialColorCommand.js"></script>
         <script src="js/commands/SetMaterialMapCommand.js"></script>
-        <script src="js/commands/SetSceneCommand.js"></script>
+        <script src="js/commands/SetSceneCommand.js"></script>        
+        <script src="energy3d/commands/SetModelValueCommand.js"></script>
 
         <!-- <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="qyqgfqd9j8z890t"></script> -->
 
@@ -189,8 +190,6 @@
 			var heliodon = Heliodon.instance;
 			heliodon.draw();
 			editor.scene.add(heliodon.root);
-
-			new Rack();
 
 			var viewport = new Viewport(editor);
 			document.body.appendChild(viewport.dom);

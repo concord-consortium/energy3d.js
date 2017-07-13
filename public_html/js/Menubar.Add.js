@@ -70,7 +70,7 @@ Menubar.Add = function (editor) {
 	option.setClass('option');
 	option.setTextContent('Solar Rack');
 	option.onClick(function () {
-		var mesh = new Rack().root;
+		var mesh = new Rack(new RackModel(2, 1, 1, 1, 1, 0, 0.5)).root;
 		mesh.name += ++meshCount;
 		editor.execute(new AddObjectCommand(mesh));
 	});

@@ -38,15 +38,17 @@ SetPositionCommand.prototype = {
 
 	execute: function () {
 
-		this.object.position.copy( this.newPosition );
-		this.object.updateMatrixWorld( true );
+		this.object.position.copy(this.newPosition);
+		this.updateModelPosition();
+		this.object.updateMatrixWorld(true);
 		this.editor.signals.objectChanged.dispatch( this.object );
 
 	},
 
 	undo: function () {
 
-		this.object.position.copy( this.oldPosition );
+		this.object.position.copy(this.oldPosition);
+		this.updateModelPosition();
 		this.object.updateMatrixWorld( true );
 		this.editor.signals.objectChanged.dispatch( this.object );
 
@@ -78,6 +80,15 @@ SetPositionCommand.prototype = {
 		this.oldPosition = new THREE.Vector3().fromArray( json.oldPosition );
 		this.newPosition = new THREE.Vector3().fromArray( json.newPosition );
 
+	},
+
+	updateModelPosition: function () {
+		const userData = this.object.userData;
+		if (userData.elementView) {
+			const model = userData.elementView.model;
+			model.x = this.object.position.x;
+			model.y = this.object.position.y;
+		}
 	}
 
 };

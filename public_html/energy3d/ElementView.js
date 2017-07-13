@@ -6,6 +6,11 @@
 
 class ElementView {
 
+	constructor(model) {
+		this.model = model;
+		this.userData = new UserData(this);
+	}
+
 	update() {
 
 	}

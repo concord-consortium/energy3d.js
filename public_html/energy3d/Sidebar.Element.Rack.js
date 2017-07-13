@@ -15,8 +15,14 @@ Sidebar.Element.Rack = function (editor, object) {
 	// dimension
 
 	var dimensionRow = new UI.Row();
-	var width = new UI.Number(parameters.width).setWidth('50px').onChange(updateGeometry);
-	var height = new UI.Number(parameters.height).setWidth('50px').onChange(updateGeometry);
+	var width = new UI.Number(parameters.width).setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "dimensionWidth", width.getValue()));
+	});
+	var height = new UI.Number(parameters.height).setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "dimensionHeight", height.getValue()));
+	});
+	width.min = 1;
+	height.min = 1;
 
 	dimensionRow.add(new UI.Text('Dimension').setWidth('110px'));
 	dimensionRow.add(width, height);
@@ -26,8 +32,14 @@ Sidebar.Element.Rack = function (editor, object) {
 	// polls
 
 	var pollsRow = new UI.Row();
-	var pollsDistanceX = new UI.Number(1).setWidth('50px').onChange(updateGeometry);
-	var pollsDistanceY = new UI.Number(1).setWidth('50px').onChange(updateGeometry);
+	var pollsDistanceX = new UI.Number(1).setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "pollDistanceX", pollsDistanceX.getValue()));
+	});
+	var pollsDistanceY = new UI.Number(1).setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "pollDistanceY", pollsDistanceY.getValue()));
+	});
+	pollsDistanceX.min = 0.1;
+	pollsDistanceY.min = 0.1;
 
 	pollsRow.add(new UI.Text('Polls Distance').setWidth('110px'));
 	pollsRow.add(pollsDistanceX, pollsDistanceY);
@@ -37,8 +49,12 @@ Sidebar.Element.Rack = function (editor, object) {
 	// position
 
 	var positionRow = new UI.Row();
-	var positionX = new UI.Number().setWidth('50px').onChange(update);
-	var positionY = new UI.Number().setWidth('50px').onChange(update);
+	var positionX = new UI.Number().setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "x", positionX.getValue()));
+	});
+	var positionY = new UI.Number().setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "y", positionY.getValue()));
+	});
 
 	positionRow.add(new UI.Text('Position').setWidth('110px'));
 	positionRow.add(positionX, positionY);
@@ -48,8 +64,12 @@ Sidebar.Element.Rack = function (editor, object) {
 	// rotation
 
 	var rotationRow = new UI.Row();
-	var rotationX = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(update);
-	var rotationZ = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(update);
+	var rotationX = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "tiltAngle", rotationX.getValue()));
+	});
+	var rotationZ = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(function () {
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "rotationAngle", rotationZ.getValue()));
+	});
 
 	rotationRow.add(new UI.Text('Rotation').setWidth('110px'));
 	rotationRow.add(rotationZ, rotationX);

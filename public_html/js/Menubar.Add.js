@@ -58,7 +58,7 @@ Menubar.Add = function (editor) {
 	option.setClass('option');
 	option.setTextContent('Foundation');
 	option.onClick(function () {
-		var mesh = new Foundation().root;
+		var mesh = new Foundation(new FoundationModel()).root;
 		mesh.name += ++meshCount;
 		editor.execute(new AddObjectCommand(mesh));
 	});
@@ -70,7 +70,7 @@ Menubar.Add = function (editor) {
 	option.setClass('option');
 	option.setTextContent('Solar Rack');
 	option.onClick(function () {
-		var mesh = new Rack(new RackModel(2, 1, 1, 1, 1, 0, 0.5)).root;
+		var mesh = new Rack(new RackModel()).root;
 		mesh.name += ++meshCount;
 		editor.execute(new AddObjectCommand(mesh));
 	});

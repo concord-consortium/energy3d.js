@@ -47,6 +47,8 @@ class Rack extends ElementView {
 				}
 			}
 		}
+		
+//		this.topMesh.geometry.computeBoundingBox();
 
 //		this.root.updateMatrixWorld(true);
 	}

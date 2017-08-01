@@ -8,10 +8,10 @@ class Foundation extends ElementView {
 
 	constructor(model) {
 		super(model);
-		this.update();
+		this.draw();
 	}
 
-	update() {
+	draw() {
 		const geometry = new THREE.BoxBufferGeometry(this.model.width, this.model.height, this.model.depth);
 		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, this.model.depth / 2));	
 		if (this.root)

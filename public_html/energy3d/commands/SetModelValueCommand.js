@@ -21,14 +21,16 @@ class SetModelValueCommand extends Command {
 
 	execute() {
 		this.object.model[ this.attributeName ] = this.newValue;
-		this.object.update();
-		this.editor.signals.objectChanged.dispatch(this.object);
+		this.object.draw();
+		this.editor.signals.objectChanged.dispatch(this.object.root);
+		this.editor.signals.sceneGraphChanged.dispatch();
+		
 	}
 
 	undo() {
 		this.object.model[ this.attributeName ] = this.oldValue;
-		this.object.update();
-		this.editor.signals.objectChanged.dispatch(this.object);
+		this.object.draw();
+		this.editor.signals.objectChanged.dispatch(this.object.root);
 	}
 
 	update(cmd) {

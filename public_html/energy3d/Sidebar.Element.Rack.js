@@ -65,40 +65,16 @@ Sidebar.Element.Rack = function (editor, object) {
 
 	var rotationRow = new UI.Row();
 	var rotationX = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(function () {
-		editor.execute(new SetModelValueCommand(object.userData.elementView, "tiltAngle", rotationX.getValue()));
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "tiltAngle", rotationX.getValue() * THREE.Math.DEG2RAD));
 	});
 	var rotationZ = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(function () {
-		editor.execute(new SetModelValueCommand(object.userData.elementView, "rotationAngle", rotationZ.getValue()));
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "rotationAngle", rotationZ.getValue() * THREE.Math.DEG2RAD));
 	});
 
 	rotationRow.add(new UI.Text('Rotation').setWidth('110px'));
 	rotationRow.add(rotationZ, rotationX);
 
 	container.add(rotationRow);
-
-
-	function updateGeometry() {
-		editor.execute(new SetGeometryCommand(object.userData.elementView.topMesh, Rack.createMesh(width.getValue(), height.getValue())));
-	}
-
-	function update() {
-		let target = object.userData.elementView.root;
-		var newPosition = new THREE.Vector3(positionX.getValue(), positionY.getValue(), target.position.z);
-		if (target.position.distanceTo(newPosition) >= 0.01) {
-			editor.execute(new SetPositionCommand(target, newPosition));
-		}
-
-		var newRotation = new THREE.Euler(0, 0, rotationZ.getValue() * THREE.Math.DEG2RAD);
-		if (target.rotation.toVector3().distanceTo(newRotation.toVector3()) >= 0.01) {
-			editor.execute(new SetRotationCommand(target, newRotation));
-		}
-
-		target = object.userData.elementView.topMesh;
-		var newRotation = new THREE.Euler(rotationX.getValue() * THREE.Math.DEG2RAD, 0, 0);
-		if (target.rotation.toVector3().distanceTo(newRotation.toVector3()) >= 0.01) {
-			editor.execute(new SetRotationCommand(target, newRotation));
-		}
-	}
 
 	container.updateUI = function (object) {
 		positionX.setValue(object.position.x);

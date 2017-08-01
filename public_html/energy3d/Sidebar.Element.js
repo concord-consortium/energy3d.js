@@ -63,20 +63,20 @@ Sidebar.Element = function (editor) {
 	// events
 
 	signals.objectSelected.add(function (object) {
-//		if (object !== null)
-//			elementPanel.updateUI(object);
+		if (object !== null)
+			elementPanel.updateUI(object);
 	});
 
 	signals.objectChanged.add(function (object) {
 		if (object !== editor.selected)
 			return;
-//		elementPanel.updateUI(object);
+		elementPanel.updateUI(object);
 	});
 
 	signals.refreshSidebarObject3D.add(function (object) {
 		if (object !== editor.selected)
 			return;
-//		elementPanel.updateUI(object);
+		elementPanel.updateUI(object);
 	});
 
 	return container;

@@ -68,7 +68,7 @@ Sidebar.Element.Foundation = function (editor, object) {
 
 	var objectRotationRow = new UI.Row();
 	var objectRotationZ = new UI.Number().setStep(10).setUnit('°').setWidth('50px').onChange(function () {
-		editor.execute(new SetModelValueCommand(object.userData.elementView, "rotationAngle", objectRotationZ.getValue()));
+		editor.execute(new SetModelValueCommand(object.userData.elementView, "rotationAngle", objectRotationZ.getValue() * THREE.Math.DEG2RAD));
 	});
 
 	objectRotationRow.add(new UI.Text('Rotation').setWidth('90px'));
@@ -76,22 +76,6 @@ Sidebar.Element.Foundation = function (editor, object) {
 
 	container.add(objectRotationRow);
 
-
-	function updateGeometry() {
-		editor.execute(new SetGeometryCommand(object, Foundation.createMesh(width.getValue(), height.getValue(), depth.getValue())));
-	}
-
-	function update() {
-		var newPosition = new THREE.Vector3(objectPositionX.getValue(), objectPositionY.getValue(), object.position.z);
-		if (object.position.distanceTo(newPosition) >= 0.01) {
-			editor.execute(new SetPositionCommand(object, newPosition));
-		}
-
-		var newRotation = new THREE.Euler(0, 0, objectRotationZ.getValue() * THREE.Math.DEG2RAD);
-		if (object.rotation.toVector3().distanceTo(newRotation.toVector3()) >= 0.01) {
-			editor.execute(new SetRotationCommand(object, newRotation));
-		}
-	}
 
 	container.updateUI = function (object) {
 		objectPositionX.setValue(object.position.x);

@@ -147,7 +147,7 @@ var Viewport = function ( editor ) {
 
 		raycaster.setFromCamera( mouse, camera );
 
-		return raycaster.intersectObjects( objects );
+		return raycaster.intersectObjects( objects, true );
 
 	}
 
@@ -408,10 +408,7 @@ var Viewport = function ( editor ) {
 	signals.geometryChanged.add( function ( object ) {
 
 		if ( object !== undefined ) {
-			if (object.userData.elementView)
-				object.userData.elementView.update();
 			selectionBox.update( object );
-
 		}
 
 		render();
@@ -420,11 +417,11 @@ var Viewport = function ( editor ) {
 
 	signals.objectAdded.add( function ( object ) {
 
-		object.traverse( function ( child ) {
+//		object.traverse( function ( child ) {
 
-			objects.push( child );
+			objects.push( object );
 
-		} );
+//		} );
 
 	} );
 
@@ -433,9 +430,6 @@ var Viewport = function ( editor ) {
 		if (editor.selected === object || editor.selected === object.parent) {
 			selectionBox.update(object);
 			transformControls.update();
-			if (object.userData.elementView)
-				object.userData.elementView.update();
-
 		}
 
 		if ( object instanceof THREE.PerspectiveCamera ) {

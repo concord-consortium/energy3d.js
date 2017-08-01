@@ -11,7 +11,7 @@ class ElementView {
 		this.userData = new UserData(this);
 	}
 
-	update() {
+	draw() {
 
 	}
 

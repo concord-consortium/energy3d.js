@@ -6,29 +6,26 @@
 
 class Rack extends ElementView {
 
-	static createMesh(rackModel) {
-		const geometry = new THREE.BoxBufferGeometry(width, height, 0.05);
-		return geometry;
-	}
-
 	constructor(model) {
 		super(model);
 		this.root = new THREE.Group();
 		this.root.name = "Rack";
 		this.root.userData = this.userData;
-		this.update();
+		this.draw();
 	}
 
-	update() {
+	draw() {
 		this.root.children.length = 0;
 		this.root.position.x = this.model.x;
 		this.root.position.y = this.model.y;
+		this.root.rotation.z = this.model.rotationAngle;
 
-		this.topMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(this.model.dimensionWidth, this.model.dimensionHeight, 0.05), new THREE.MeshStandardMaterial());
+		const geometry = new THREE.BoxBufferGeometry(this.model.dimensionWidth, this.model.dimensionHeight, 0.05);
+		this.topMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial());
 		this.topMesh.name = "Rack Top";
 		this.topMesh.userData = this.userData;
 		this.topMesh.position.z = this.model.pollHeight;
-		this.topMesh.rotation.x = this.model.tiltAngle;
+		this.topMesh.rotation.x = this.model.tiltAngle;		
 		this.root.add(this.topMesh);
 
 		const scaleX = this.model.dimensionWidth;
@@ -47,10 +44,6 @@ class Rack extends ElementView {
 				}
 			}
 		}
-		
-//		this.topMesh.geometry.computeBoundingBox();
-
-//		this.root.updateMatrixWorld(true);
 	}
 
 	addPole(x, y) {
@@ -65,13 +58,7 @@ class Rack extends ElementView {
 		pole.position.y = y;
 		pole.position.z = poleHeight / 2;
 		pole.rotation.x = Math.PI / 2;
-//		pole.scale.x = 1 / this.root.scale.x;
-//		pole.scale.z = 1 / this.root.scale.y;
 		this.root.add(pole);
-	}
-
-	draw() {
-
 	}
 
 }
